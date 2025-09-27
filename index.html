@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Agenda Cultural Gratuita</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <h1>Agenda Cultural Gratuita</h1>
+      <p>O que fazer na sua cidade sem gastar nada.</p>
+    </header>
+
+    <main>
+      <section class="filtros" aria-labelledby="filtrar-eventos">
+        <h2 id="filtrar-eventos" class="sr-only">Filtrar eventos</h2>
+
+        <div class="campo">
+          <label for="data">Data:</label>
+          <input type="date" id="data" />
+        </div>
+
+        <div class="campo">
+          <label for="categoria">Categoria:</label>
+          <select id="categoria">
+            <option value="todos">Todas</option>
+            <option value="musica">Música</option>
+            <option value="teatro">Teatro</option>
+            <option value="feira">Feira</option>
+            <option value="cinema">Cinema</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="estado">Estado:</label>
+          <select id="estado" name="estado">
+            <option value="">Selecione um Estado</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="cidade">Cidade:</label>
+          <select id="cidade" name="cidade" disabled>
+            <option value="">Escolha um estado primeiro</option>
+          </select>
+        </div>
+      </section>
+
+      <section class="secao-eventos" id="lista-eventos">
+        <h2 id="proximos-eventos">Próximos Eventos</h2>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Quer sugerir um evento? <a href="#">Clique aqui</a></p>
+      <p>&copy; 2025 - Projeto Extensionista - Programação Web</p>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const seletorEstado = document.getElementById("estado");
+        const seletorCidade = document.getElementById("cidade");
+        const containerEventos = document.getElementById("lista-eventos");
+        const tituloSecaoEventos = document.getElementById("proximos-eventos");
+
+        // --- BANCO DE DADOS DE EVENTOS ---
+        const todosEventos = [
+          {
+            id: 1,
+            dia: "15",
+            mes: "SET",
+            titulo: "Show na Praça",
+            local: "Praça da Matriz",
+            horario: "19:00",
+            cidade: "Recife",
+            estado: "PE",
+          },
+          {
+            id: 2,
+            dia: "18",
+            mes: "SET",
+            titulo: "Feira de Artesanato Local",
+            local: "Parque Central",
+            horario: "09:00 - 17:00",
+            cidade: "São Paulo",
+            estado: "SP",
+          },
+          {
+            id: 3,
+            dia: "22",
+            mes: "SET",
+            titulo: "Cinema ao Ar Livre",
+            local: "Anfiteatro da Universidade",
+            horario: "20:00",
+            cidade: "Salvador",
+            estado: "BA",
+          },
+          {
+            id: 4,
+            dia: "28",
+            mes: "SET",
+            titulo: "Maratona de Corridas",
+            local: "Orla da cidade",
+            horario: "08:00",
+            cidade: "Rio de Janeiro",
+            estado: "RJ",
+          },
+        ];
+
+        // --- FUNÇÃO PARA RENDERIZAR OS CARDS DOS EVENTOS ---
+        function renderizarEventos(listaDeEventos) {
+          containerEventos.innerHTML = "";
+          containerEventos.appendChild(tituloSecaoEventos);
+
+          if (listaDeEventos.length === 0) {
+            const mensagemSemEventos = document.createElement("p");
+            mensagemSemEventos.textContent =
+              "Nenhum evento encontrado para a seleção atual.";
+            containerEventos.appendChild(mensagemSemEventos);
+            return;
+          }
+
+          listaDeEventos.forEach((evento) => {
+            const cardHTML = `
+              <article class="evento-card">
+                  <div class="data">
+                      <span class="dia">${evento.dia}</span>
+                      <span class="mes">${evento.mes}</span>
+                  </div>
+                  <div class="info">
+                      <h3>${evento.titulo}</h3>
+                      <p><strong>Local:</strong> ${evento.local} - ${evento.cidade}/${evento.estado}</p>
+                      <p><strong>Horário:</strong> ${evento.horario}</p>
+                      <a href="evento.html?id=${evento.id}" class="btn-detalhes">Mais detalhes</a>
+                  </div>
+              </article>
+            `;
+            containerEventos.insertAdjacentHTML("beforeend", cardHTML);
+          });
+        }
+
+        // --- FUNÇÃO PARA ATUALIZAR A EXIBIÇÃO COM BASE NOS FILTROS ---
+        function atualizarExibicao() {
+          const estadoSelecionado = seletorEstado.value;
+          const cidadeSelecionada = seletorCidade.value;
+          let eventosFiltrados = todosEventos;
+
+          if (estadoSelecionado) {
+            eventosFiltrados = eventosFiltrados.filter(
+              (evento) => evento.estado === estadoSelecionado
+            );
+          }
+          if (cidadeSelecionada) {
+            eventosFiltrados = eventosFiltrados.filter(
+              (evento) => evento.cidade === cidadeSelecionada
+            );
+          }
+          renderizarEventos(eventosFiltrados);
+        }
+
+        // --- LÓGICA DO FILTRO DE ESTADOS E CIDADES ---
+        const estadosCidades = {
+          // ATENÇÃO: COLE AQUI O OBJETO GIGANTE COM TODOS OS ESTADOS E CIDADES DO BRASIL
+          AC: [
+            "Acrelândia",
+            "Assis Brasil",
+            "Brasiléia",
+            "Bujari" /* ...todas as outras... */,
+          ],
+          AL: [
+            "Água Branca",
+            "Anadia",
+            "Arapiraca" /* ...todas as outras... */,
+          ],
+          // ... E ASSIM POR DIANTE PARA TODOS OS ESTADOS
+        };
+
+        const estados = Object.keys(estadosCidades).sort();
+        for (const estado of estados) {
+          const option = document.createElement("option");
+          option.value = estado;
+          option.textContent = estado;
+          seletorEstado.appendChild(option);
+        }
+
+        seletorEstado.addEventListener("change", () => {
+          const estadoSelecionado = seletorEstado.value;
+          seletorCidade.innerHTML = "";
+          seletorCidade.disabled = true;
+
+          if (estadoSelecionado) {
+            seletorCidade.disabled = false;
+            const primeiraOpcao = document.createElement("option");
+            primeiraOpcao.value = "";
+            primeiraOpcao.textContent = "Todas as cidades";
+            seletorCidade.appendChild(primeiraOpcao);
+
+            const cidades = estadosCidades[estadoSelecionado].sort();
+            for (const cidade of cidades) {
+              const option = document.createElement("option");
+              option.value = cidade;
+              option.textContent = cidade;
+              seletorCidade.appendChild(option);
+            }
+          } else {
+            const option = document.createElement("option");
+            option.textContent = "Escolha um estado primeiro";
+            seletorCidade.appendChild(option);
+          }
+          atualizarExibicao();
+        });
+
+        seletorCidade.addEventListener("change", atualizarExibicao);
+
+        // --- CARREGAMENTO INICIAL ---
+        renderizarEventos(todosEventos);
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detalhes do Evento</title>
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <h1>Agenda Cultural Gratuita</h1>
+      <p>O que fazer na sua cidade sem gastar nada.</p>
+    </header>
+
+    <main>
+      <article class="detalhe-evento">
+        <img id="evento-imagem" src="" alt="" />
+        <h2 id="evento-titulo"></h2>
+
+        <div class="informacoes-gerais">
+          <p class="info-item"><i>📅</i> <strong id="evento-data"></strong></p>
+          <p class="info-item">
+            <i>🕒</i> <strong id="evento-horario"></strong>
+          </p>
+          <p class="info-item"><i>📍</i> <strong id="evento-local"></strong></p>
+        </div>
+
+        <div class="descricao">
+          <h3>Sobre o Evento</h3>
+          <p id="evento-descricao"></p>
+        </div>
+
+        <a href="index.html" class="link-voltar">&larr; Voltar para a agenda</a>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <p>&copy; 2025 - Projeto Extensionista - Programação Web</p>
+    </footer>
+
+    <script src="event-details.js"></script>
+  </body>
+</html>
